@@ -4,6 +4,12 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import MainTabs from "@/app/components/MainTabs"
+import { BaseWalletMultiButton } from "@/components/ui/murphy/connect-wallet-button"
+
+
+import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
+import { WalletProvider } from "@/components/providers/wallet-provider"
+import { Wallet } from "lucide-react"
 
 const fadeIn = {
   hidden: { opacity: 0, y: 40 },
@@ -39,7 +45,13 @@ export default function HomePage() {
       transition={{ duration: 0.4 }}
     >
       <div className="p-6 max-w-5xl mx-auto space-y-8">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-4">
+          <WalletProvider>
+            <ConnectWalletButton>
+              <Wallet className="size-4 mr-2" />
+              Connect Wallet
+            </ConnectWalletButton>
+          </WalletProvider>
           <button
             className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 transition font-semibold"
             onClick={handleLogout}
