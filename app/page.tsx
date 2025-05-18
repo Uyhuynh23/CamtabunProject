@@ -6,9 +6,10 @@ import AboutSection from "@/app/components/AboutSection"
 import AuthCard from "@/app/components/AuthCard"
 import MainTabs from "@/app/components/MainTabs"
 import { login, register } from "@/app/services/authServices"
+import HeroSection from "./components/HeroSection"
 
 const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0 },
 }
 
@@ -20,6 +21,7 @@ export default function VoSo() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [registerMode, setRegisterMode] = useState(false)
+  const [showAuth, setShowAuth] = useState<"none" | "login" | "register">("none");
 
   const handleLogin = async () => {
     setError("")
@@ -45,28 +47,81 @@ export default function VoSo() {
 
   if (!isLoggedIn) {
     return (
-      <motion.div
-        className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-800 to-black"
-        initial="hidden"
-        animate="visible"
-        variants={fadeIn}
-        transition={{ duration: 0.4 }}
-      >
-        <div className="w-full max-w-xl space-y-8">
-          <AboutSection />
-          <AuthCard
-            email={email}
-            setEmail={setEmail}
-            password={password}
-            setPassword={setPassword}
-            error={error}
-            registerMode={registerMode}
-            setRegisterMode={setRegisterMode}
-            handleLogin={handleLogin}
-            handleRegister={handleRegister}
-          />
+      <div className="relative min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-black">
+        {/* Nút Login/Register ở góc phải */}
+        <div className="absolute top-6 right-8 z-30">
+          <button
+            className="px-6 py-2 rounded-xl bg-cyan-500 text-white font-bold text-lg shadow-lg hover:scale-105 transition"
+            onClick={() => setShowAuth("login")}
+          >
+            Login / Register
+          </button>
         </div>
-      </motion.div>
+
+        {/* Nội dung trang chính */}
+        <motion.div
+          className="flex flex-col items-center justify-center"
+          initial="hidden"
+          animate="visible"
+          variants={fadeIn}
+          transition={{ duration: 0.4 }}
+        >
+          <motion.div
+            variants={fadeIn}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="w-full"
+          >
+            <HeroSection />
+          </motion.div>
+          <motion.div
+            variants={fadeIn}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="w-full"
+          >
+            <AboutSection />
+          </motion.div>
+        </motion.div>
+
+        {/* Overlay modal cho Auth */}
+        {showAuth !== "none" && (
+          <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60">
+            <motion.div
+              variants={fadeIn}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.3 }}
+              className="w-full max-w-xl mx-auto bg-slate-900 rounded-2xl shadow-2xl p-8 relative"
+            >
+              <button
+                className="absolute top-4 right-4 text-cyan-400 text-2xl hover:text-cyan-200 transition"
+                onClick={() => setShowAuth("none")}
+              >
+                ×
+              </button>
+              <AuthCard
+                email={email}
+                setEmail={setEmail}
+                password={password}
+                setPassword={setPassword}
+                error={error}
+                registerMode={showAuth === "register"}
+                setRegisterMode={mode => setShowAuth(mode ? "register" : "login")}
+                handleLogin={handleLogin}
+                handleRegister={(fullName, verifyPassword) => {
+                  // TODO: Validate fullName, password === verifyPassword, gọi API register, gửi mã xác thực email...
+                  // Sau khi xác thực thành công, lưu thông tin user vào backend
+                  // Sau khi xác thực email, cho phép login
+                  handleRegister();
+                }}
+              />
+            </motion.div>
+          </div>
+        )}
+      </div>
     )
   }
 

@@ -6,7 +6,7 @@ export async function login(email: string, password: string): Promise<LoginResul
   if (email === "abc" && password === "abc") {
     return { success: true, user: { email, isPublisher: false } }
   }
-  return { success: false, message: "Sai tài khoản hoặc mật khẩu" }
+  return { success: false, message: "Incorrect email or password" }
 }
 
 export type RegisterResult = 
@@ -18,5 +18,5 @@ export async function register(email: string, password: string): Promise<Registe
   if (email && password) {
     return { success: true }
   }
-  return { success: false, message: "Thiếu thông tin đăng ký" }
+  return { success: false, message: "Please fill all flieds." }
 }

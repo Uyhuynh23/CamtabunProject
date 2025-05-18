@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JobJob",
-  description: "Solana Job Board",
+  title: "VoSo",
+  description: "Voucher Martketplace using Solana",
 };
 
 export default function RootLayout({
