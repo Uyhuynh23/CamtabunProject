@@ -101,6 +101,7 @@ export default function LoginPage() {
               password={password}
               setPassword={setPassword}
               error={error}
+              setError={setError}
               registerMode={showAuth === "register"}
               setRegisterMode={mode => setShowAuth(mode ? "register" : "login")}
               handleLogin={handleLogin}
