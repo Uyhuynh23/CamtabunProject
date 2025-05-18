@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useState } from "react"
 import { motion } from "framer-motion"
 import AboutSection from "@/app/components/AboutSection"
@@ -13,6 +15,7 @@ const fadeIn = {
 }
 
 export default function VoSo() {
+  const router = useRouter()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isPublisher, setIsPublisher] = useState(false)
   const [isVerified, setIsVerified] = useState(false)
@@ -20,6 +23,15 @@ export default function VoSo() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [registerMode, setRegisterMode] = useState(false)
+
+  useEffect(() => {
+    const user = localStorage.getItem('user')
+    if (user) {
+      router.push('/pages/home')
+    } else {
+      router.push('/pages/login')
+    }
+  }, [router])
 
   const handleLogin = async () => {
     setError("")
