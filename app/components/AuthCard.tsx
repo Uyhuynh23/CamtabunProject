@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { User } from "lucide-react"
+import React, { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { User } from "lucide-react";
+import { register } from "@/app/services/authServices";
 
 export interface AuthCardProps {
   email: string;
@@ -13,8 +14,7 @@ export interface AuthCardProps {
   registerMode: boolean;
   setRegisterMode: (mode: boolean) => void;
   handleLogin: () => void;
-  // Sửa lại hàm handleRegister để nhận thêm verificationCode
-  handleRegister: (fullName: string, verifyPassword: string, verificationCode?: string) => void;
+  setError: (msg: string) => void;
   extra?: React.ReactNode;
 }
 
@@ -27,7 +27,7 @@ const AuthCard = ({
   registerMode,
   setRegisterMode,
   handleLogin,
-  handleRegister,
+  setError,
   extra,
 }: AuthCardProps) => {
   const [fullName, setFullName] = useState("");
@@ -36,10 +36,20 @@ const AuthCard = ({
   const [verificationCode, setVerificationCode] = useState("");
   const [localError, setLocalError] = useState("");
 
-  // Gửi mã xác thực về email (giả lập)
+  // Reset localError và các trường khi chuyển giữa login/register
+  useEffect(() => {
+    setLocalError("");
+    setError(""); // Reset error toàn cục khi chuyển login/register
+    setFullName("");
+    setVerifyPassword("");
+    setVerificationCode("");
+    setEmailSent(false);
+  }, [registerMode]);
+
+  // Gửi mã xác thực về email
   const handleSendVerification = async () => {
     if (!fullName || !email || !password || !verifyPassword) {
-      setLocalError("Please fill all fields.");
+      setLocalError("Please fill in all fields.");
       return;
     }
     if (password !== verifyPassword) {
@@ -47,20 +57,44 @@ const AuthCard = ({
       return;
     }
     setLocalError("");
-    // Gọi API gửi mã xác thực về email ở đây
-    // await sendVerificationCode(email)
+    const sendCodeRes = await fetch("/api/send-verify-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    if (!sendCodeRes.ok) {
+      setLocalError("Failed to send verification code. Please try again.");
+      return;
+    }
     setEmailSent(true);
+    setLocalError("Verification code sent! Please check your email.");
   };
 
   // Xác thực mã và đăng ký
-  const handleVerifyAndRegister = () => {
+  const handleVerifyAndRegister = async () => {
     if (!verificationCode) {
       setLocalError("Please enter the verification code sent to your email.");
       return;
     }
     setLocalError("");
-    // Gọi API xác thực mã và lưu user vào backend ở đây
-    handleRegister(fullName, verifyPassword, verificationCode);
+    const res = await register(email, password, fullName, verificationCode);
+    if (res.success) {
+      setRegisterMode(false);
+      setError("Registration successful! Please log in.");
+    } else {
+      setLocalError(res.message || "Register failed");
+    }
+  };
+
+  // Xử lý logic khi button Login được click
+  const handleLoginClick = async () => {
+    setLocalError("");
+    setError("");
+    if (!email || !password) {
+      setLocalError("Please enter both email and password.");
+      return;
+    }
+    await handleLogin();
   };
 
   return (
@@ -83,7 +117,10 @@ const AuthCard = ({
             placeholder="Email"
             className="rounded-xl bg-slate-800/70 text-white border-cyan-400/30"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={e => {
+              setEmail(e.target.value);
+              setLocalError("");
+            }}
             disabled={registerMode && emailSent}
           />
           <Input
@@ -91,7 +128,10 @@ const AuthCard = ({
             type="password"
             className="rounded-xl bg-slate-800/70 text-white border-cyan-400/30"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={e => {
+              setPassword(e.target.value);
+              setLocalError("");
+            }}
             disabled={registerMode && emailSent}
           />
           {registerMode && !emailSent && (
@@ -115,7 +155,7 @@ const AuthCard = ({
           {!registerMode && (
             <Button
               className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-bold shadow-lg hover:scale-105 transition"
-              onClick={handleLogin}
+              onClick={handleLoginClick}
             >
               Login
             </Button>

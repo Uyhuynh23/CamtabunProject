@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 import AboutSection from "@/app/components/AboutSection"
 import AuthCard from "@/app/components/AuthCard"
 import MainTabs from "@/app/components/MainTabs"
-import { login, register } from "@/app/services/authServices"
+import { login } from "@/app/services/authServices"
 import HeroSection from "./components/HeroSection"
 
 const fadeIn = {
@@ -20,8 +20,7 @@ export default function VoSo() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  const [registerMode, setRegisterMode] = useState(false)
-  const [showAuth, setShowAuth] = useState<"none" | "login" | "register">("none");
+  const [showAuth, setShowAuth] = useState<"none" | "login" | "register">("none")
 
   const handleLogin = async () => {
     setError("")
@@ -31,17 +30,6 @@ export default function VoSo() {
       setIsPublisher(res.user.isPublisher)
     } else {
       setError(res.message || "Login failed")
-    }
-  }
-
-  const handleRegister = async () => {
-    setError("")
-    const res = await register(email, password)
-    if (res.success) {
-      setRegisterMode(false)
-      setError("Đăng ký thành công! Vui lòng đăng nhập.")
-    } else {
-      setError(res.message || "Register failed")
     }
   }
 
@@ -111,12 +99,7 @@ export default function VoSo() {
                 registerMode={showAuth === "register"}
                 setRegisterMode={mode => setShowAuth(mode ? "register" : "login")}
                 handleLogin={handleLogin}
-                handleRegister={(fullName, verifyPassword) => {
-                  // TODO: Validate fullName, password === verifyPassword, gọi API register, gửi mã xác thực email...
-                  // Sau khi xác thực thành công, lưu thông tin user vào backend
-                  // Sau khi xác thực email, cho phép login
-                  handleRegister();
-                }}
+                setError={setError}
               />
             </motion.div>
           </div>
@@ -140,7 +123,7 @@ export default function VoSo() {
             className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 transition font-semibold"
             onClick={() => setIsLoggedIn(false)}
           >
-            Đăng xuất
+            Logout
           </button>
         </div>
         <motion.div
