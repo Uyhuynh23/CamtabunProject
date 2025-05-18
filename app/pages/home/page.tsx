@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import MainTabs from "@/app/components/MainTabs"
 
 const fadeIn = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0 },
 }
 
@@ -18,7 +18,7 @@ export default function HomePage() {
   useEffect(() => {
     const user = localStorage.getItem('user')
     if (!user) {
-      router.push('/pages/login')  // Updated path
+      router.push('/pages/login')
     } else {
       const userData = JSON.parse(user)
       setIsPublisher(userData.isPublisher)
@@ -27,7 +27,7 @@ export default function HomePage() {
 
   const handleLogout = () => {
     localStorage.removeItem('user')
-    router.push('/pages/login')  // Updated path
+    router.push('/pages/login')
   }
 
   return (
