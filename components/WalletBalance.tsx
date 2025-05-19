@@ -1,6 +1,8 @@
 "use client";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { Wallet } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Connection, clusterApiUrl, PublicKey } from "@solana/web3.js";
 
 export default function WalletBalance() {
   const { publicKey } = useWallet();
@@ -11,35 +13,27 @@ export default function WalletBalance() {
       setBalance(null);
       return;
     }
-    fetch("/api/user-balance", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ walletAddress: publicKey.toString() }),
-    })
-      .then(async res => {
-        if (!res.ok) {
-          console.error("API error:", res.status);
-          return { tokenBalance: 104 };
-        }
-        return res.json();
+    // Lấy balance từ Solana blockchain
+    const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+    connection.getBalance(new PublicKey(publicKey.toString()))
+      .then(lamports => {
+        const sol = lamports / 1e9;
+        console.log("SOL Balance:", sol);
+        setBalance(sol);
       })
-      .then(data => {
-        // Nếu data.tokenBalance là undefined hoặc null, fallback về 100
-        const balance = typeof data.tokenBalance === "number" ? data.tokenBalance : 100;
-        console.log("API tokenBalance:", balance);
-        setBalance(balance);
+      .catch(err => {
+        console.error("Error fetching SOL balance:", err);
+        setBalance(null);
       });
   }, [publicKey]);
 
-
-   // In ra balance mỗi khi nó thay đổi
+  // In ra balance mỗi khi nó thay đổi
   console.log("Token Balance:", balance);
   
   if (!publicKey) return null;
   return (
     <div className="text-slate-200 font-semibold">
-      Token Balance: {balance !== null ? balance : "Loading..."}
+      SOL Balance: {balance !== null ? balance : "Loading..."}
     </div>
   );
 }
-
