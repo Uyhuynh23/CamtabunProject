@@ -78,6 +78,7 @@ export default function HomePage() {
           setIsVerified={setIsVerified}
           setIsPublisher={setIsPublisher}
         />
+                                                              
       </div>
     </motion.div>
   )
