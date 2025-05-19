@@ -31,17 +31,6 @@ export default function LoginPage() {
     }
   }
 
-  const handleRegister = async () => {
-    setError("")
-    const res = await register(email, password)
-    if (res.success) {
-      setError("Đăng ký thành công! Vui lòng đăng nhập.")
-      setShowAuth("login")
-    } else {
-      setError(res.message || "Register failed")
-    }
-  }
-
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-black">
       <div className="absolute top-6 right-8 z-30">
@@ -105,7 +94,6 @@ export default function LoginPage() {
               registerMode={showAuth === "register"}
               setRegisterMode={mode => setShowAuth(mode ? "register" : "login")}
               handleLogin={handleLogin}
-              handleRegister={handleRegister}
             />
           </motion.div>
         </div>
