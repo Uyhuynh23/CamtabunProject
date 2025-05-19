@@ -1,5 +1,5 @@
 {
-  "name": "CambutanProject",
+  "name": "CamtabunProject",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "framer-motion": "^11.0.1",
+    "@solana/web3.js": "^1.95.2",
     "@phosphor-icons/react": "^2.1.8",
     "@prisma/client": "^6.8.2",
     "@radix-ui/react-collapsible": "^1.1.8",
