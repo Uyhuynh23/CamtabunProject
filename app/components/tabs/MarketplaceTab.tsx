@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Gift, ChevronLeft, ChevronRight } from "lucide-react"
+import { Gift, ChevronLeft, ChevronRight, Search } from "lucide-react" // Add Search icon
 import { useRouter } from "next/navigation"
 import { marketplaceVouchers } from "@/app/data/mockVouchers"
 import { useState, useEffect } from "react"
@@ -17,12 +17,15 @@ const pageTransition = {
 export function MarketplaceTab() {
   const router = useRouter()
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filteredVouchers, setFilteredVouchers] = useState(marketplaceVouchers)
   const [paginatedVouchers, setPaginatedVouchers] = useState(marketplaceVouchers)
   const [direction, setDirection] = useState(0)
 
   const totalPages = Math.ceil(marketplaceVouchers.length / ITEMS_PER_PAGE)
 
   useEffect(() => {
+    const totalPages = Math.ceil(filteredVouchers.length / ITEMS_PER_PAGE)
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
     const endIndex = startIndex + ITEMS_PER_PAGE
     setPaginatedVouchers(marketplaceVouchers.slice(startIndex, endIndex))
