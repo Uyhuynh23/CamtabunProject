@@ -1,12 +1,18 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Gift, ChevronLeft, ChevronRight, Search } from "lucide-react" // Add Search icon
+import { Gift, ChevronLeft, ChevronRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { marketplaceVouchers } from "@/app/data/mockVouchers"
 import { useState, useEffect } from "react"
 
 const ITEMS_PER_PAGE = 6
+
+
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+}
 
 const pageTransition = {
   enter: { opacity: 0, scale: 0.98 },
@@ -14,23 +20,50 @@ const pageTransition = {
   exit: { opacity: 0, scale: 0.98 }
 }
 
+const categories = ["All", ...Array.from(new Set(marketplaceVouchers.map(v => v.category)))];
+
 export function MarketplaceTab() {
-  const router = useRouter()
-  const [currentPage, setCurrentPage] = useState(1)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filteredVouchers, setFilteredVouchers] = useState(marketplaceVouchers)
-  const [paginatedVouchers, setPaginatedVouchers] = useState(marketplaceVouchers)
-  const [direction, setDirection] = useState(0)
-  const [openVoucherId, setOpenVoucherId] = useState<number | null>(null)
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [filteredVouchers, setFilteredVouchers] = useState(marketplaceVouchers);
+  const [paginatedVouchers, setPaginatedVouchers] = useState(marketplaceVouchers);
+  const [direction, setDirection] = useState(0);
+  const [openVoucherId, setOpenVoucherId] = useState<number | null>(null);
 
-  const totalPages = Math.ceil(marketplaceVouchers.length / ITEMS_PER_PAGE)
+  // Category filter logic
+  const handleCategoryToggle = (cat: string) => {
+    if (cat === "All") {
+      setSelectedCategories([]);
+    } else {
+      setSelectedCategories(prev =>
+        prev.includes(cat)
+          ? prev.filter(c => c !== cat)
+          : [...prev, cat]
+      );
+    }
+  };
 
+  // Filter vouchers by search and category
   useEffect(() => {
-    const totalPages = Math.ceil(filteredVouchers.length / ITEMS_PER_PAGE)
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const endIndex = startIndex + ITEMS_PER_PAGE
-    setPaginatedVouchers(marketplaceVouchers.slice(startIndex, endIndex))
-  }, [currentPage])
+    const filtered = marketplaceVouchers.filter(v =>
+      (selectedCategories.length === 0 || selectedCategories.includes(v.category)) &&
+      (v.name.toLowerCase().includes(search.toLowerCase()) ||
+        v.description.toLowerCase().includes(search.toLowerCase()))
+    );
+    setFilteredVouchers(filtered);
+    setCurrentPage(1); // Reset to first page on filter/search change
+  }, [search, selectedCategories]);
+
+  // Pagination logic
+  useEffect(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    setPaginatedVouchers(filteredVouchers.slice(startIndex, endIndex));
+  }, [currentPage, filteredVouchers]);
+
+  const totalPages = Math.ceil(filteredVouchers.length / ITEMS_PER_PAGE);
 
   const handlePageChange = (pageNumber: number) => {
     const newDirection = pageNumber > currentPage ? 1 : -1
@@ -39,8 +72,46 @@ export function MarketplaceTab() {
   }
 
   return (
-      <div className="mt-4 max-w-[1500px] mx-auto">      <Card className="rounded-2xl shadow-md border border-purple-200/60 bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300">
+    <motion.div variants={fadeIn} transition={{ delay: 0.15 }}>
+    <div className="mt-4 max-w-[1500px] mx-auto">
+      {/* Search Bar Centered */}
+      <div className="flex justify-center mb-4">
+        <input
+          type="text"
+          placeholder="Search vouchers..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full max-w-2xl px-6 py-3 rounded-2xl border border-purple-300 shadow focus:outline-none focus:ring-2 focus:ring-purple-400 text-center bg-white/90 placeholder:text-purple-400"
+        />
+      </div>
+      {/* Category Filter Centered Below Search */}
+      <div className="flex justify-center mb-6">
+        <div className="flex gap-2 flex-wrap justify-center">
+          {categories.map(cat => (
+            <label
+              key={cat}
+              className={`flex items-center gap-2 px-3 py-2 rounded-full font-semibold border cursor-pointer transition
+                ${cat === "All" && selectedCategories.length === 0
+                  ? "bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-white border-none"
+                  : cat !== "All" && selectedCategories.includes(cat)
+                    ? "bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-white border-none"
+                    : "bg-white border-purple-200 text-purple-700 hover:bg-purple-50"}`}
+            >
+              <input
+                type="checkbox"
+                checked={cat === "All" ? selectedCategories.length === 0 : selectedCategories.includes(cat)}
+                onChange={() => handleCategoryToggle(cat)}
+                className="form-checkbox accent-purple-500"
+              />
+              {cat}
+            </label>
+          ))}
+        </div>
+      </div>
+      <Card className="rounded-2xl shadow-md border border-purple-200/60 bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300">
         <CardContent className="p-8">
+          
+          {/* Title */}
           <h3 className="text-2xl font-extrabold mb-4 flex items-center gap-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow">
             <Gift className="w-10 h-6 text-purple-500" /> Available Vouchers
           </h3>
@@ -55,7 +126,12 @@ export function MarketplaceTab() {
                 transition={{ opacity: { duration: 0.22 }, scale: { duration: 0.22 } }}
                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full"
               >
-                {paginatedVouchers.map((voucher, index) => (
+                {paginatedVouchers.length === 0 ? (
+                  <div className="col-span-full text-center text-gray-500 py-12">
+                    <Gift className="mx-auto w-12 h-12 text-purple-300 mb-2" />
+                    No vouchers found matching your search or filter.
+                  </div>
+                ) : paginatedVouchers.map((voucher, index) => (
                   <div key={voucher.id} className="w-full flex flex-col items-center">
                     {/* Card chỉ chứa hình ảnh hoặc icon */}
                     <Card
@@ -77,7 +153,6 @@ export function MarketplaceTab() {
                     {/* Text nằm dưới khung */}
                     <div className="mt-3 text-center w-full max-w-[550px]">
                       <div className="text-xl font-bold text-purple-700">{voucher.name}</div>
-                      
                     </div>
                     {/* Details modal/drawer giữ nguyên */}
                     {openVoucherId === voucher.id && (
@@ -125,5 +200,6 @@ export function MarketplaceTab() {
         </CardContent>
       </Card>
     </div>
+    </motion.div>
   )
 }
