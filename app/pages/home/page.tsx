@@ -1,16 +1,24 @@
 'use client'
 
+// import { useState, useEffect } from "react"
+// import { motion } from "framer-motion"
+// import { useRouter } from "next/navigation"
+// import MainTabs from "@/app/components/MainTabs"
+// import { BaseWalletMultiButton } from "@/components/ui/murphy/connect-wallet-button"
+// import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
+// import { WalletProvider } from "@/components/providers/wallet-provider"
+// import { Wallet } from "lucide-react"
+// import WalletBalance from "@/components/WalletBalance"
+
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import MainTabs from "@/app/components/MainTabs"
 import { BaseWalletMultiButton } from "@/components/ui/murphy/connect-wallet-button"
-
-
 import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
 import { WalletProvider } from "@/components/providers/wallet-provider"
 import { Wallet } from "lucide-react"
-
+import WalletBalance from "@/components/WalletBalance"
 const fadeIn = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0 },
@@ -44,21 +52,45 @@ export default function HomePage() {
       variants={fadeIn}
       transition={{ duration: 0.4 }}
     >
-      <div className="p-6 max-w-5xl mx-auto space-y-8">
+      {/* <div className="p-6 max-w-5xl mx-auto space-y-8">
         <div className="flex justify-end gap-4">
+        <div className="flex items-center gap-2 bg-slate-800 rounded-xl px-4 py-2 shadow">
           <WalletProvider>
-            <ConnectWalletButton>
-              <Wallet className="size-4 mr-2" />
-              Connect Wallet
-            </ConnectWalletButton>
+          <ConnectWalletButton>
+            <Wallet className="size-4 mr-2" />
+            Connect Wallet
+          </ConnectWalletButton>
+          <span className="text-cyan-300 font-semibold text-sm">
+            <WalletBalance />
+          </span>
           </WalletProvider>
-          <button
-            className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 transition font-semibold"
-            onClick={handleLogout}
-          >
-            Logout
-          </button>
         </div>
+        <button
+          className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 transition font-semibold"
+          onClick={handleLogout}
+        >
+          Logout
+        </button> */}
+        <div className="p-6 max-w-5xl mx-auto space-y-8">
+        <div className="flex justify-end gap-4">
+        <div className="flex items-center gap-2 bg-slate-800 rounded-xl px-4 py-2 shadow">
+          <WalletProvider>
+          <ConnectWalletButton>
+            <Wallet className="size-4 mr-2" />
+            Connect Wallet
+          </ConnectWalletButton>
+          <span className="text-cyan-300 font-semibold text-sm">
+            <WalletBalance />
+          </span>
+          </WalletProvider>
+        </div>
+        <button
+          className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 transition font-semibold"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
         <motion.div
           className="text-center space-y-2"
           initial={{ opacity: 0 }}
