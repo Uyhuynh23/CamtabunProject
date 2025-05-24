@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
 import { register } from "@/app/services/authServices";
+import { sendVerificationCode } from "@/app/services/authServices";
 
 export interface AuthCardProps {
   email: string;
@@ -57,28 +58,27 @@ const AuthCard = ({
       return;
     }
     setLocalError("");
-    const sendCodeRes = await fetch("/api/send-verify-code", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    if (!sendCodeRes.ok) {
-      setLocalError("Failed to send verification code. Please try again.");
-      return;
-    }
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    await sendVerificationCode(email, fullName, code);
+    localStorage.setItem("verify_email", email);
+    localStorage.setItem("verify_code", code);
     setEmailSent(true);
     setLocalError("Verification code sent! Please check your email.");
   };
 
   // Xác thực mã và đăng ký
   const handleVerifyAndRegister = async () => {
-    if (!verificationCode) {
-      setLocalError("Please enter the verification code sent to your email.");
+    const savedEmail = localStorage.getItem("verify_email");
+    const savedCode = localStorage.getItem("verify_code");
+    if (email !== savedEmail || verificationCode !== savedCode) {
+      setLocalError("Invalid verification code or email.");
       return;
     }
     setLocalError("");
     const res = await register(email, password, fullName, verificationCode);
     if (res.success) {
+      localStorage.removeItem("verify_email");
+      localStorage.removeItem("verify_code");
       setRegisterMode(false);
       setError("Registration successful! Please log in.");
     } else {

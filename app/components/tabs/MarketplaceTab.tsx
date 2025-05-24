@@ -80,7 +80,7 @@ export function MarketplaceTab() {
             <Gift className="w-6 h-6 text-primary" /> Available Vouchers
           </h3>
           
-          <div className="relative w-full" style={{ minHeight: '500px' }}> {/* Add container with fixed height */}
+          <div className="relative w-full overflow-hidden" style={{ minHeight: '500px' }}>
             <AnimatePresence mode="sync" custom={direction}>
               <motion.div
                 key={currentPage}
@@ -94,7 +94,8 @@ export function MarketplaceTab() {
                   opacity: { duration: 0.15 },
                   scale: { duration: 0.15 }
                 }}
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full" // Bỏ absolute, thêm w-full
+                className="absolute inset-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full"
+                style={{ top: 0, left: 0 }}
               >
                 {paginatedVouchers.map((voucher, index) => (
                   <motion.div
@@ -110,7 +111,7 @@ export function MarketplaceTab() {
                       scale: { duration: 0.15 },
                       delay: index * 0.01
                     }}
-                    className="w-full" // Đảm bảo mỗi item full width grid cell
+                    className="w-full"
                   >
                     <Card className="rounded-xl shadow hover:shadow-lg transition border border-slate-800 bg-gradient-to-br from-slate-800/80 to-blue-900/80 w-full">
                       <CardContent className="p-4 flex flex-col gap-2 items-center w-full">

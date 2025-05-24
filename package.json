@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@heroicons/react": "^2.2.0",
     "@phosphor-icons/react": "^2.1.8",
     "@prisma/client": "^6.8.2",
