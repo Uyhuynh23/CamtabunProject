@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import AboutSection from "@/app/components/AboutSection"
 import AuthCard from "@/app/components/AuthCard"
 import HeroSection from "@/app/components/HeroSection"
+import HowItWorksSection from "@/app/components/HowItWorksSection"
 import { login, register } from "@/app/services/authServices"
 import { BaseWalletMultiButton } from "@/components/ui/murphy/connect-wallet-button";
 
@@ -70,14 +71,20 @@ export default function LoginPage() {
         </motion.div>
       </motion.div>
 
+      <HowItWorksSection />
+
       {showAuth !== "none" && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60">
+        <div
+          className="fixed inset-0 z-40 flex items-center justify-center bg-black/60"
+          onClick={() => setShowAuth("none")}
+        >
           <motion.div
             variants={fadeIn}
             initial="hidden"
             animate="visible"
             transition={{ duration: 0.3 }}
             className="w-full max-w-xl mx-auto bg-slate-900 rounded-2xl shadow-2xl p-8 relative"
+            onClick={e => e.stopPropagation()} // Ngăn sự kiện nổi bọt lên overlay
           >
             <button
               className="absolute top-4 right-4 text-cyan-400 text-2xl hover:text-cyan-200 transition"
@@ -95,11 +102,7 @@ export default function LoginPage() {
               registerMode={showAuth === "register"}
               setRegisterMode={mode => setShowAuth(mode ? "register" : "login")}
               handleLogin={handleLogin}
-              onKeyDown={e => {
-                if (e.key === "Enter") handleLogin()
-              }}
             />
-            
           </motion.div>
         </div>
       )}
