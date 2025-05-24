@@ -11,6 +11,7 @@ import { mplTokenMetadata } from '@metaplex-foundation/mpl-token-metadata';
 import { toast } from "sonner";
 import { Loader2, ExternalLink, CheckCircle, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 // UI components
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,9 @@ export interface MintNFTProps {
   collectionMint?: string;
   rpcUrl?: string;
   className?: string;
+  URI?: string;
+  lockUri?: boolean;
+  onReset?: () => void;
 }
 
 // Type for NFT form values
@@ -83,17 +87,19 @@ const customResolver = (data: any) => {
   };
 };
 
-export function MintNFT({ collectionMint, className }: MintNFTProps) {
+export function MintNFT({ collectionMint, className, URI, lockUri, onReset }: MintNFTProps) {
+
   // Hooks
   const { connection } = useConnection();
   const { publicKey, connected, wallet, signTransaction, signAllTransactions } = useWallet();
   const { endpoint, switchToNextEndpoint } = useContext(ModalContext);
+  const router = useRouter();
   
   // State
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [network, setNetwork] = useState('devnet');
-  const [currentStage, setCurrentStage] = useState('input'); // input, confirming, success, error
+  const [currentStage, setCurrentStage] = useState<'input' | 'confirming' | 'success' | 'error'>('input');
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<{
     signature: string;
@@ -105,7 +111,7 @@ export function MintNFT({ collectionMint, className }: MintNFTProps) {
     defaultValues: {
       name: "",
       symbol: "",
-      uri: "",
+      uri: URI || "",
     },
     mode: "onSubmit",
     resolver: customResolver,
@@ -197,10 +203,10 @@ export function MintNFT({ collectionMint, className }: MintNFTProps) {
       });
       
       // If transaction fails due to connection error, try switching to another endpoint
-      if (err.message.includes('failed to fetch') || 
-          err.message.includes('timeout') || 
-          err.message.includes('429') ||
-          err.message.includes('503')) {
+      if (err.message?.includes('failed to fetch') || 
+          err.message?.includes('timeout') || 
+          err.message?.includes('429') ||
+          err.message?.includes('503')) {
         switchToNextEndpoint();
       }
     } finally {
@@ -222,12 +228,14 @@ export function MintNFT({ collectionMint, className }: MintNFTProps) {
     }
   };
 
-  // Reset form
+  // Reset form/page
   const resetForm = () => {
-    form.reset();
-    setResult(null);
-    setError(null);
-    setCurrentStage('input');
+    // If onReset is provided by parent, call it, otherwise reload the NFTs page
+    if (onReset) {
+      onReset();
+    } else {
+      router.replace("/pages/nfts");
+    }
   };
 
   // Render success view
@@ -378,7 +386,8 @@ export function MintNFT({ collectionMint, className }: MintNFTProps) {
                 <Input
                   placeholder="Enter metadata URI"
                   {...field}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !!lockUri}
+                  readOnly={!!lockUri}
                   className="bg-transparent border-none text-xl font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </FormControl>
