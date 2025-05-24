@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
 import { register } from "@/app/services/authServices";
+import { sendVerificationCode } from "@/app/services/authServices";
 
 export interface AuthCardProps {
   email: string;
@@ -16,6 +17,7 @@ export interface AuthCardProps {
   handleLogin: () => void;
   setError: (msg: string) => void;
   extra?: React.ReactNode;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void; // <-- thêm dòng này
 }
 
 const AuthCard = ({
@@ -57,28 +59,27 @@ const AuthCard = ({
       return;
     }
     setLocalError("");
-    const sendCodeRes = await fetch("/api/send-verify-code", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    if (!sendCodeRes.ok) {
-      setLocalError("Failed to send verification code. Please try again.");
-      return;
-    }
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    await sendVerificationCode(email, fullName, code);
+    localStorage.setItem("verify_email", email);
+    localStorage.setItem("verify_code", code);
     setEmailSent(true);
     setLocalError("Verification code sent! Please check your email.");
   };
 
   // Xác thực mã và đăng ký
   const handleVerifyAndRegister = async () => {
-    if (!verificationCode) {
-      setLocalError("Please enter the verification code sent to your email.");
+    const savedEmail = localStorage.getItem("verify_email");
+    const savedCode = localStorage.getItem("verify_code");
+    if (email !== savedEmail || verificationCode !== savedCode) {
+      setLocalError("Invalid verification code or email.");
       return;
     }
     setLocalError("");
     const res = await register(email, password, fullName, verificationCode);
     if (res.success) {
+      localStorage.removeItem("verify_email");
+      localStorage.removeItem("verify_code");
       setRegisterMode(false);
       setError("Registration successful! Please log in.");
     } else {
@@ -104,7 +105,19 @@ const AuthCard = ({
           <User className="w-8 h-8 text-cyan-400 drop-shadow" />
           <h2 className="text-3xl font-bold text-white">Welcome to VoSo</h2>
         </div>
-        <div className="space-y-4">
+        <form
+          className="space-y-4"
+          onSubmit={e => {
+            e.preventDefault();
+            if (!registerMode) {
+              handleLoginClick();
+            } else if (registerMode && !emailSent) {
+              handleSendVerification();
+            } else if (registerMode && emailSent) {
+              handleVerifyAndRegister();
+            }
+          }}
+        >
           {registerMode && !emailSent && (
             <Input
               placeholder="Full Name"
@@ -154,30 +167,31 @@ const AuthCard = ({
           {(localError || error) && <div className="text-red-400 text-sm">{localError || error}</div>}
           {!registerMode && (
             <Button
+              type="submit"
               className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-bold shadow-lg hover:scale-105 transition"
-              onClick={handleLoginClick}
             >
               Login
             </Button>
           )}
           {registerMode && !emailSent && (
             <Button
+              type="submit"
               className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-bold shadow-lg hover:scale-105 transition"
-              onClick={handleSendVerification}
             >
               Send Verification Code
             </Button>
           )}
           {registerMode && emailSent && (
             <Button
+              type="submit"
               className="w-full rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-bold shadow-lg hover:scale-105 transition"
-              onClick={handleVerifyAndRegister}
             >
               Register
             </Button>
           )}
           {registerMode ? (
             <Button
+              type="button"
               variant="outline"
               className="w-full rounded-xl border-cyan-400 text-cyan-300 hover:bg-cyan-400/10 transition"
               onClick={() => setRegisterMode(false)}
@@ -186,6 +200,7 @@ const AuthCard = ({
             </Button>
           ) : (
             <Button
+              type="button"
               variant="outline"
               className="w-full rounded-xl border-cyan-400 text-cyan-300 hover:bg-cyan-400/10 transition"
               onClick={() => setRegisterMode(true)}
@@ -194,7 +209,7 @@ const AuthCard = ({
             </Button>
           )}
           {extra && <div className="mt-2">{extra}</div>}
-        </div>
+        </form>
       </CardContent>
     </Card>
   );

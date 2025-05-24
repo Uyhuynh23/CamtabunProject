@@ -86,6 +86,7 @@ const customResolver = (data: any) => {
 };
 
 export function MintNFT({ collectionMint, className, URI, lockUri }: MintNFTProps) {
+
   // Hooks
   const { connection } = useConnection();
   const { publicKey, connected, wallet, signTransaction, signAllTransactions } = useWallet();
@@ -108,6 +109,7 @@ export function MintNFT({ collectionMint, className, URI, lockUri }: MintNFTProp
       name: "",
       symbol: "",
       uri: URI || "",
+
     },
     mode: "onSubmit",
     resolver: customResolver,

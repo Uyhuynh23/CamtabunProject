@@ -16,6 +16,7 @@ interface PublisherTabProps {
 }
 
 export function PublisherTab({ isVerified, setIsVerified }: PublisherTabProps) {
+
   const router = useRouter();
 
   return (
@@ -59,6 +60,7 @@ export function PublisherTab({ isVerified, setIsVerified }: PublisherTabProps) {
               </div>
 
               <div className="space-y-2">
+
                 <Label className="font-medium text-purple-700">Create Voucher</Label>
                 <div className="flex gap-4">
                   <Button
@@ -74,6 +76,7 @@ export function PublisherTab({ isVerified, setIsVerified }: PublisherTabProps) {
                     Create cNFT Voucher
                   </Button>
                 </div>
+
               </div>
 
               <div className="space-y-2">
