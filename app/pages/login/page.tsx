@@ -95,6 +95,9 @@ export default function LoginPage() {
               registerMode={showAuth === "register"}
               setRegisterMode={mode => setShowAuth(mode ? "register" : "login")}
               handleLogin={handleLogin}
+              onKeyDown={e => {
+                if (e.key === "Enter") handleLogin()
+              }}
             />
             
           </motion.div>

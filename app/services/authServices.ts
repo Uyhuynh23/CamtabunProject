@@ -1,6 +1,7 @@
 //import emailjs from "@emailjs/browser";
 import React, { useRef, useState } from 'react';
 import emailjs from '@emailjs/browser';
+import { mockUsers } from "@/app/data/mockUsers";
 
 
 
@@ -38,15 +39,44 @@ export type LoginResult =
   | { success: false, message: string };
 
 export async function login(email: string, password: string): Promise<LoginResult> {
-  // Nếu email và password đều là "abc" thì cho đăng nhập luôn
-  if (email === "abc" && password === "abc") {
-    return { success: true, user: { email, isPublisher: false } };
+  const user = mockUsers.find(
+    (u) => (u.email === email) && u.password === password
+  );
+  if (user) {
+    // Lưu user vào localStorage để dùng chung
+    localStorage.setItem("currentUser", JSON.stringify({
+      email: user.email,
+      displayName: user.displayName,
+      isPublisher: user.isPublisher,
+      contact: user.contact
+    }));
+    return { success: true, user: { email: user.email, isPublisher: user.isPublisher } };
   }
+
+  // Nếu email và password đều là "abc" thì cho đăng nhập luôn
+  // Nếu email và password đều là "abc" thì cho đăng nhập luôn
+  
+  if (email === "pub" && password === "pub") {
+    localStorage.setItem("currentUser", JSON.stringify({
+      email,
+      displayName: "Publisher",
+      isPublisher: true,
+      contact: ""
+    }));
+    return { success: true, user: { email, isPublisher: true } };
+  }
+
   // Lấy danh sách user đã đăng ký từ localStorage
   const users = JSON.parse(localStorage.getItem("users") || "[]");
-  const user = users.find((u: any) => u.email === email && u.password === password);
-  if (user) {
-    return { success: true, user: { email: user.email, isPublisher: user.isPublisher || false } }
+  const localUser = users.find((u: any) => u.email === email && u.password === password);
+  if (localUser) {
+    localStorage.setItem("currentUser", JSON.stringify({
+      email: localUser.email,
+      displayName: localUser.fullName || "",
+      isPublisher: localUser.isPublisher || false,
+      contact: localUser.contact || ""
+    }));
+    return { success: true, user: { email: localUser.email, isPublisher: localUser.isPublisher || false } }
   }
   return { success: false, message: "Incorrect email or password" }
 }

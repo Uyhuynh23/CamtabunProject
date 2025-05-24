@@ -51,7 +51,7 @@ export default function HomePage() {
       variants={fadeIn}
       transition={{ duration: 0.4 }}
     >
-      <div className="p-6 max-w-5xl mx-auto space-y-8 white">
+      <div className="p-6 max-w-[1500px] mx-auto space-y-8 white">
         <div className="flex justify-end gap-4">
           <div className="flex items-center gap-2 rounded-xl px-4 py-2 shadow-md border border-purple-200 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50/80 backdrop-blur">
             <WalletProvider>
