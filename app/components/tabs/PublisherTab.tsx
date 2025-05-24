@@ -3,7 +3,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Gift } from "lucide-react"
 import { Label } from "@/components/ui/label"
-import { useRouter } from "next/navigation"
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -16,9 +15,6 @@ interface PublisherTabProps {
 }
 
 export function PublisherTab({ isVerified, setIsVerified }: PublisherTabProps) {
-
-  const router = useRouter();
-
   return (
     <motion.div variants={fadeIn} transition={{ delay: 0.2 }}>
       <Card className="mt-4 rounded-2xl shadow-md border border-purple-200/60 bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300">
@@ -60,23 +56,9 @@ export function PublisherTab({ isVerified, setIsVerified }: PublisherTabProps) {
               </div>
 
               <div className="space-y-2">
-
-                <Label className="font-medium text-purple-700">Create Voucher</Label>
-                <div className="flex gap-4">
-                  <Button
-                    className="flex-1 rounded-xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-white font-semibold hover:brightness-110 transition"
-                    onClick={() => router.push("/pages/nfts")}
-                  >
-                    Create NFT Voucher
-                  </Button>
-                  <Button
-                    className="flex-1 rounded-xl bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 text-white font-semibold hover:brightness-110 transition"
-                    onClick={() => router.push("/pages/cnfts")}
-                  >
-                    Create cNFT Voucher
-                  </Button>
-                </div>
-
+                <Label htmlFor="newVoucher" className="font-medium text-purple-700">Create New Voucher</Label>
+                <input id="newVoucher" placeholder="Voucher name or reward" className="rounded-xl bg-white/70 text-purple-700 border-purple-200 px-3 py-2 w-full" />
+                <Button className="rounded-xl mt-2 bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 text-white font-semibold hover:brightness-110 transition">Create</Button>
               </div>
 
               <div className="space-y-2">
