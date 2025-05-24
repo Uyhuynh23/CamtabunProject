@@ -34,6 +34,14 @@ export function MyVouchersTab({ currentUser }: MyVouchersTabProps) {
             <div className="text-center text-gray-500 py-12">
               <Gift className="mx-auto w-12 h-12 text-purple-300 mb-2" />
               You don't own any vouchers yet.
+              <div className="mt-6 flex justify-center">
+                <Button
+                  className="rounded-xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-white font-semibold hover:brightness-110 transition"
+                  onClick={() => router.push("/pages/Verify")}
+                >
+                  Become a Publisher
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
