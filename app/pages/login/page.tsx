@@ -7,6 +7,7 @@ import AboutSection from "@/app/components/AboutSection"
 import AuthCard from "@/app/components/AuthCard"
 import HeroSection from "@/app/components/HeroSection"
 import { login, register } from "@/app/services/authServices"
+import { BaseWalletMultiButton } from "@/components/ui/murphy/connect-wallet-button";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 40 },
@@ -95,6 +96,7 @@ export default function LoginPage() {
               setRegisterMode={mode => setShowAuth(mode ? "register" : "login")}
               handleLogin={handleLogin}
             />
+            
           </motion.div>
         </div>
       )}

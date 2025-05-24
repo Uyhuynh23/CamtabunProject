@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation" 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,7 @@ export default function MainTabs({
   setIsPublisher,
 }: MainTabsProps) {
   const [tab, setTab] = useState("marketplace")
+  const router = useRouter()
 
   return (
     <Tabs defaultValue="marketplace" value={tab} onValueChange={setTab} className="w-full">
@@ -54,10 +56,19 @@ export default function MainTabs({
                   </Card>
                 ))}
               </div>
+              <div className="flex justify-center mt-8">
+                <button
+                className="px-6 py-2 rounded-xl bg-cyan-500 text-white font-bold text-lg shadow-lg hover:scale-105 transition"
+                onClick={() => router.push('/pages/market')}
+                >
+                  More
+              </button>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
       </TabsContent>
+
 
       {/* My Vouchers Tab */}
       <TabsContent value="myVouchers">
@@ -81,8 +92,16 @@ export default function MainTabs({
                   </Card>
                 ))}
               </div>
-              <Button onClick={() => setIsPublisher(true)} className="w-full sm:w-auto rounded-xl shadow hover:scale-105 transition mt-4">
-                Become a Publisher
+              <Button
+                onClick={() => {
+                  if (!isPublisher) {
+                     router.push('/pages/Verify')
+                  }
+                  }}
+                  disabled={isPublisher}
+                  className="w-full sm:w-auto rounded-xl shadow hover:scale-105 transition mt-4"
+                >
+                {isPublisher ? "You are the publisher now" : "Become a Publisher"}
               </Button>
             </CardContent>
           </Card>
