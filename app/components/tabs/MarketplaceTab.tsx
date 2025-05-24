@@ -1,10 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Gift, ChevronLeft, ChevronRight } from "lucide-react"
+import { Gift, ChevronLeft, ChevronRight, Search } from "lucide-react" // Add Search icon
 import { useRouter } from "next/navigation"
 import { marketplaceVouchers } from "@/app/data/mockVouchers"
 import { useState, useEffect } from "react"
+import { Input } from "@/components/ui/input" // Add this import
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -17,15 +18,28 @@ const ITEMS_PER_PAGE = 6
 export function MarketplaceTab() {
   const router = useRouter()
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filteredVouchers, setFilteredVouchers] = useState(marketplaceVouchers)
   const [paginatedVouchers, setPaginatedVouchers] = useState(marketplaceVouchers)
-  
-  const totalPages = Math.ceil(marketplaceVouchers.length / ITEMS_PER_PAGE)
 
+  // Filter vouchers based on search term
   useEffect(() => {
+    const filtered = marketplaceVouchers.filter(voucher =>
+      voucher.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    setFilteredVouchers(filtered)
+    setCurrentPage(1) // Reset to first page when searching
+  }, [searchTerm])
+
+  // Update pagination
+  useEffect(() => {
+    const totalPages = Math.ceil(filteredVouchers.length / ITEMS_PER_PAGE)
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
     const endIndex = startIndex + ITEMS_PER_PAGE
-    setPaginatedVouchers(marketplaceVouchers.slice(startIndex, endIndex))
-  }, [currentPage])
+    setPaginatedVouchers(filteredVouchers.slice(startIndex, endIndex))
+  }, [currentPage, filteredVouchers])
+
+  const totalPages = Math.ceil(filteredVouchers.length / ITEMS_PER_PAGE)
 
   // First, modify the transition variants
   const pageTransition = {
@@ -76,11 +90,26 @@ export function MarketplaceTab() {
     <div className="mt-4">
       <Card className="rounded-2xl shadow-md border border-slate-800 bg-slate-900/80">
         <CardContent className="p-8">
-          <h3 className="text-2xl font-semibold mb-4 flex items-center gap-2 text-white">
-            <Gift className="w-6 h-6 text-primary" /> Available Vouchers
-          </h3>
-          
-          <div className="relative w-full overflow-hidden" style={{ minHeight: '500px' }}>
+          <div className="flex flex-col gap-4">
+            <h3 className="text-2xl font-semibold flex items-center gap-2 text-white">
+              <Gift className="w-6 h-6 text-primary" /> Available Vouchers
+               {/* <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+              <Input
+                type="text"
+                placeholder="Search vouchers..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+              />
+            </div> */}
+            </h3>
+            
+            {/* Search Bar */}
+           
+          </div>
+
+          <div className="relative" style={{ minHeight: '500px' }}> {/* Add container with fixed height */}
             <AnimatePresence mode="sync" custom={direction}>
               <motion.div
                 key={currentPage}
