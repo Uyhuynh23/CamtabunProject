@@ -7,7 +7,8 @@ import {
   ConnectionProviderProps,
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
- 
+ import { TxnSettingsProvider } from "@/components/ui/murphy/txn-settings";
+import { LazorKitWalletProvider } from "./lazorkit-wallet-context";
 // Create wrapper components
 // @ts-ignore - Ignore React 19 compatibility error
 const ConnectionProviderWrapper = (props: ConnectionProviderProps) => (
@@ -34,6 +35,8 @@ interface ModalContextState {
   availableEndpoints: string[];
   currentEndpointIndex: number;
   isMainnet: boolean;
+    walletType: 'standard' | 'lazorkit';
+  setWalletType: (type: 'standard' | 'lazorkit') => void;
 }
  
 export const ModalContext = createContext<ModalContextState>({
@@ -44,6 +47,8 @@ export const ModalContext = createContext<ModalContextState>({
   availableEndpoints: [],
   currentEndpointIndex: 0,
   isMainnet: true,
+  walletType: 'standard',
+  setWalletType: () => null,
 });
  
 export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
@@ -102,7 +107,8 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
     [props.wallets]
   );
   const [isOpen, setIsOpen] = useState(false);
- 
+  const [walletType, setWalletType] = useState<'standard' | 'lazorkit'>('standard');
+
   console.log(
     `Using Solana ${isMainnet ? "mainnet" : "devnet"} endpoint: ${endpoint} (${
       currentEndpointIndex + 1
@@ -119,11 +125,15 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
         availableEndpoints: publicRPCs,
         currentEndpointIndex,
         isMainnet,
+        walletType,
+        setWalletType,
       }}
     >
-      <ConnectionProviderWrapper endpoint={endpoint}>
+       <ConnectionProviderWrapper endpoint={endpoint}>
         <WalletProviderWrapper wallets={wallets} autoConnect>
-          {children}
+          <LazorKitWalletProvider>
+            <TxnSettingsProvider>{children}</TxnSettingsProvider>
+          </LazorKitWalletProvider>
         </WalletProviderWrapper>
       </ConnectionProviderWrapper>
     </ModalContext.Provider>
