@@ -40,8 +40,6 @@ export interface MintNFTProps {
   collectionMint?: string;
   rpcUrl?: string;
   className?: string;
-  URI?: string; // Optional URI for metadata, can be used to pre-fill the form
-  lockUri?: boolean; // <-- Add this prop
 }
 
 // Type for NFT form values
@@ -85,8 +83,7 @@ const customResolver = (data: any) => {
   };
 };
 
-export function MintNFT({ collectionMint, className, URI, lockUri }: MintNFTProps) {
-
+export function MintNFT({ collectionMint, className }: MintNFTProps) {
   // Hooks
   const { connection } = useConnection();
   const { publicKey, connected, wallet, signTransaction, signAllTransactions } = useWallet();
@@ -108,8 +105,7 @@ export function MintNFT({ collectionMint, className, URI, lockUri }: MintNFTProp
     defaultValues: {
       name: "",
       symbol: "",
-      uri: URI || "",
-
+      uri: "",
     },
     mode: "onSubmit",
     resolver: customResolver,
@@ -382,8 +378,7 @@ export function MintNFT({ collectionMint, className, URI, lockUri }: MintNFTProp
                 <Input
                   placeholder="Enter metadata URI"
                   {...field}
-                  disabled={isSubmitting || !!lockUri}
-                  readOnly={!!lockUri}
+                  disabled={isSubmitting}
                   className="bg-transparent border-none text-xl font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
                 />
               </FormControl>
