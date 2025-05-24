@@ -33,7 +33,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-black">
+    <div className="relative min-h-screen bg-gradient-to-br from-blue-100 via-purple-200 to-pink-200">
       <div className="absolute top-6 right-8 z-30">
         <button
           className="px-6 py-2 rounded-xl bg-cyan-500 text-white font-bold text-lg shadow-lg hover:scale-105 transition"

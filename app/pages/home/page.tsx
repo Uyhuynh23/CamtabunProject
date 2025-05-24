@@ -46,61 +46,42 @@ export default function HomePage() {
 
   return (
     <motion.div
-      className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-black p-0"
+      className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-200 to-pink-200 p-0"
       initial="hidden"
       animate="visible"
       variants={fadeIn}
       transition={{ duration: 0.4 }}
     >
-      {/* <div className="p-6 max-w-5xl mx-auto space-y-8">
+      <div className="p-6 max-w-5xl mx-auto space-y-8 white">
         <div className="flex justify-end gap-4">
-        <div className="flex items-center gap-2 bg-slate-800 rounded-xl px-4 py-2 shadow">
-          <WalletProvider>
-          <ConnectWalletButton>
-            <Wallet className="size-4 mr-2" />
-            Connect Wallet
-          </ConnectWalletButton>
-          <span className="text-cyan-300 font-semibold text-sm">
-            <WalletBalance />
-          </span>
-          </WalletProvider>
+          <div className="flex items-center gap-2 rounded-xl px-4 py-2 shadow-md border border-purple-200 bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50/80 backdrop-blur">
+            <WalletProvider>
+              <ConnectWalletButton>
+                <Wallet className="size-4 mr-2 text-white-400" />
+                <span className="text-white-100 font-semibold">Connect Wallet</span>
+              </ConnectWalletButton>
+              <span className="text-purple-700 font-semibold text-sm">
+                <WalletBalance />
+              </span>
+            </WalletProvider>
+          </div>
+          <button
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-400 via-pink-300 to-blue-200 text-white hover:brightness-110 transition font-semibold shadow border border-purple-200"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
         </div>
-        <button
-          className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 transition font-semibold"
-          onClick={handleLogout}
-        >
-          Logout
-        </button> */}
-        <div className="p-6 max-w-5xl mx-auto space-y-8">
-        <div className="flex justify-end gap-4">
-        <div className="flex items-center gap-2 bg-slate-800 rounded-xl px-4 py-2 shadow">
-          <WalletProvider>
-          <ConnectWalletButton>
-            <Wallet className="size-4 mr-2" />
-            Connect Wallet
-          </ConnectWalletButton>
-          <span className="text-cyan-300 font-semibold text-sm">
-            <WalletBalance />
-          </span>
-          </WalletProvider>
-        </div>
-        <button
-          className="px-4 py-2 rounded-xl bg-slate-800 text-slate-200 hover:bg-slate-700 transition font-semibold"
-          onClick={handleLogout}
-        >
-          Logout
-        </button>
-      </div>
         <motion.div
           className="text-center space-y-2"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight drop-shadow-lg bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent animate-pulse">
+          <h1 className="text-6xl md:text-7xl font-extrabold tracking-tight drop-shadow-lg bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-pulse">
             VoSo
           </h1>
-          <p className="text-slate-200 text-lg font-medium drop-shadow">
+          <p className="text-purple-700 text-lg font-medium drop-shadow">
             Voucher Social Marketplace
           </p>
         </motion.div>
@@ -110,7 +91,6 @@ export default function HomePage() {
           setIsVerified={setIsVerified}
           setIsPublisher={setIsPublisher}
         />
-                                                              
       </div>
     </motion.div>
   )

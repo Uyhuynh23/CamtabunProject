@@ -26,26 +26,30 @@ export function MyVouchersTab({ isPublisher, setIsPublisher }: MyVouchersTabProp
 
   return (
     <motion.div variants={fadeIn} transition={{ delay: 0.15 }}>
-          <Card className="mt-4 rounded-2xl shadow-md border border-slate-800 bg-slate-900/80">
+          <Card className="mt-4 rounded-2xl shadow-md border border-purple-200/60 bg-gradient-to-br from-blue-300 via-purple-300 to-pink-300">
             <CardContent className="p-8 space-y-6">
-              <h3 className="text-2xl font-semibold flex items-center gap-2 text-white">
-                <CheckCircle className="w-6 h-6 text-green-500" /> Your Vouchers
+              <h3 className="text-2xl font-extrabold flex items-center gap-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow">
+                <CheckCircle className="w-6 h-6 text-green-400" /> Your Vouchers
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[1, 2].map((v) => (
-                  <Card key={v} className="rounded-xl shadow border border-slate-800 bg-gradient-to-br from-slate-800/80 to-blue-900/80">
+                  <Card key={v} className="rounded-xl shadow border border-purple-100/60 bg-gradient-to-br from-blue-100 via-purple-50 to-pink-50/80">
                     <CardContent className="p-4 flex flex-col gap-1">
-                      <span className="font-medium text-white">Voucher #{v}</span>
-                      <span className="text-xs text-slate-400">Expires: 2025-12-31</span>
+                      <span className="font-medium text-purple-800">Voucher #{v}</span>
+                      <span className="text-xs text-purple-500">Expires: 2025-12-31</span>
                       <div className="flex gap-2 mt-2">
-                        <Button size="sm" variant="outline" className="rounded-lg">Show QR</Button>
-                        <Button size="sm" className="rounded-lg">Redeem</Button>
+                        <Button size="sm" variant="outline" className="rounded-lg border-purple-200 text-purple-700 bg-white/70 hover:bg-purple-50">
+                          Show QR
+                        </Button>
+                        <Button size="sm" className="rounded-lg bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 text-white border-none hover:brightness-110">
+                          Redeem
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
-              <Button onClick={() => setIsPublisher(true)} className="w-full sm:w-auto rounded-xl shadow hover:scale-105 transition mt-4">
+              <Button onClick={() => setIsPublisher(true)} className="w-full sm:w-auto rounded-xl shadow bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 text-white font-semibold hover:brightness-110 transition mt-4">
                 Become a Publisher
               </Button>
             </CardContent>

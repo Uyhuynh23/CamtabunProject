@@ -253,5 +253,10 @@ export function BaseWalletMultiButton({ children, labels = LABELS, ...props }: P
 
 // ----- Public Exported Button -----
 export function ConnectWalletButton(props: WalletButtonProps) {
-  return <BaseWalletMultiButton {...props} />
+  return (
+    <BaseWalletMultiButton
+      {...props}
+      className={`px-4 py-2 rounded-xl bg-gradient-to-r from-purple-400 via-pink-300 to-blue-200 text-white hover:brightness-110 transition font-semibold shadow border border-purple-200 ${props.className || ""}`}
+    />
+  )
 }

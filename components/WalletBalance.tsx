@@ -32,7 +32,7 @@ export default function WalletBalance() {
   
   if (!publicKey) return null;
   return (
-    <div className="text-slate-200 font-semibold">
+    <div className="text-slate-white-200 font-semibold">
       SOL Balance: {balance !== null ? balance : "Loading..."}
     </div>
   );
