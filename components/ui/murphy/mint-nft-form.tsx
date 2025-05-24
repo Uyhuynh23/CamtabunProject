@@ -12,7 +12,8 @@ import { toast } from "sonner";
 import { Loader2, ExternalLink, CheckCircle, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-
+import { mockUsers } from "@/app/data/mockUsers"
+import { marketplaceVouchers } from "@/app/data/mockVouchers"
 // UI components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +45,7 @@ export interface MintNFTProps {
   URI?: string;
   lockUri?: boolean;
   onReset?: () => void;
+  voucher: any
 }
 
 // Type for NFT form values
@@ -87,7 +89,7 @@ const customResolver = (data: any) => {
   };
 };
 
-export function MintNFT({ collectionMint, className, URI, lockUri, onReset }: MintNFTProps) {
+export function MintNFT({ collectionMint, className, URI, lockUri, onReset, voucher }: MintNFTProps) {
 
   // Hooks
   const { connection } = useConnection();
@@ -185,6 +187,11 @@ export function MintNFT({ collectionMint, className, URI, lockUri, onReset }: Mi
         signature: mintResult.signature.toString(),
         nftAddress: nftMint.publicKey.toString()
       });
+
+      // Store voucher in mockVouchers after successful mint
+      if (voucher) {
+        marketplaceVouchers.push(voucher);
+      }
       
       toast.success("NFT created successfully!", {
         id: "create-nft",

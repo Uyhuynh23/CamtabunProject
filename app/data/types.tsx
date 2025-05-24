@@ -6,5 +6,5 @@ export interface Voucher {
   expiryDate: string
   price: number
   type: 'discount' | 'gift' | 'special'
-  status: 'available' | 'sold' | 'expired'
+  status: 'available' | 'expired'
 }
