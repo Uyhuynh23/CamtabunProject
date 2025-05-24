@@ -57,7 +57,7 @@ export default function LoginPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="w-full"
         >
-          <HeroSection />
+          <HeroSection onGetStarted={() => setShowAuth("login")} />
         </motion.div>
         <motion.div
           variants={fadeIn}

@@ -36,10 +36,10 @@ const features = [
 
 export default function AboutSection() {
   return (
-    <div className="relative bg-slate-900/90 rounded-3xl px-8 py-8 mb-6 shadow-2xl border-4 border-cyan-400/40 w-full max-w-7xl mx-auto
+    <div id="about" className="relative bg-slate-900/90 rounded-3xl px-8 py-8 mb-6 shadow-2xl border-4 border-cyan-400/40 w-full max-w-7xl mx-auto
       before:content-[''] before:absolute before:inset-0 before:rounded-3xl before:border-8 before:border-cyan-400/30 before:blur-lg before:opacity-60 before:pointer-events-none
     ">
-      <h1 className="text-5xl font-extrabold bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent mb-8 drop-shadow-lg text-center animate-pulse">
+      <h1 className="text-6xl font-extrabold bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-500 bg-clip-text text-transparent mb-8 drop-shadow-lg text-center animate-pulse">
         About VoSo
       </h1>
       <span className="block text-2xl font-bold text-cyan-300 mb-10 text-center">
