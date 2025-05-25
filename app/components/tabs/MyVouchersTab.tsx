@@ -6,6 +6,8 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { marketplaceVouchers } from "@/app/data/mockVouchers"
 import { mockUsers } from "@/app/data/mockUsers"
+import Link from "next/link";
+import QRCode from "react-qr-code";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -22,6 +24,7 @@ export function MyVouchersTab({ currentUser }: MyVouchersTabProps) {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [qrVoucherId, setQrVoucherId] = useState<number | null>(null);
 
   // Hàm xử lý chọn category
   const handleCategoryToggle = (cat: string) => {
@@ -103,44 +106,92 @@ export function MyVouchersTab({ currentUser }: MyVouchersTabProps) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {myVouchers.map((voucher) => (
-                <Card
-                  key={voucher.id}
-                  className="rounded-xl shadow border border-purple-100/60 bg-gradient-to-br from-blue-100 via-purple-50 to-pink-50/80 hover:scale-[1.02] transition"
-                >
-                  <CardContent className="p-4 flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={voucher.image ? voucher.image : "/images/default.png"}
-                        alt={voucher.name}
-                        className="w-12 h-12 rounded-lg object-cover border border-purple-100"
-                      />
-                      <div>
-                        <span className="font-semibold text-purple-800">{voucher.name}</span>
-                        <div className="text-xs text-purple-500">Expires: {voucher.expiryDate}</div>
+                <Link key={voucher.id} href={`/voucher/${voucher.id}`} className="block">
+                  <Card
+                    className="rounded-xl shadow border border-purple-100/60 bg-gradient-to-br from-blue-100 via-purple-50 to-pink-50/80 hover:scale-[1.02] transition cursor-pointer"
+                  >
+                    <CardContent className="p-4 flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={voucher.image ? voucher.image : "/images/default.png"}
+                          alt={voucher.name}
+                          className="w-12 h-12 rounded-lg object-cover border border-purple-100"
+                        />
+                        <div>
+                          <span className="font-semibold text-purple-800">{voucher.name}</span>
+                          <div className="text-xs text-purple-500">Expires: {voucher.expiryDate}</div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex gap-2 mt-3">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="rounded-lg border-purple-200 text-purple-700 bg-white/70 hover:bg-purple-50 flex items-center gap-1"
-                      >
-                        <QrCode className="w-4 h-4" /> Show QR
-                      </Button>
-                      <Button
-                        size="sm"
-                        className="rounded-lg bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 text-white border-none hover:brightness-110 flex items-center gap-1"
-                      >
-                        Redeem
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <div className="flex gap-2 mt-3">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-lg border-purple-200 text-purple-700 bg-white/70 hover:bg-purple-50 flex items-center gap-1"
+                          onClick={e => {
+                            e.preventDefault(); // Không chuyển trang khi bấm QR
+                            setQrVoucherId(voucher.id);
+                          }}
+                        >
+                          <QrCode className="w-4 h-4" /> Show QR
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-lg border-green-200 text-green-700 bg-white/70 hover:bg-green-50 flex items-center gap-1"
+                          // onClick={() => ...} // Thêm logic mở popup Sell nếu muốn
+                        >
+                          Sell
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-lg border-cyan-200 text-cyan-700 bg-white/70 hover:bg-cyan-50 flex items-center gap-1"
+                          // onClick={() => ...} // Thêm logic mở popup Gift nếu muốn
+                        >
+                          Gift
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
               ))}
             </div>
           )}
         </CardContent>
       </Card>
+      {/* QR Code Modal */}
+      {qrVoucherId && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          onClick={() => setQrVoucherId(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center relative"
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl"
+              onClick={() => setQrVoucherId(null)}
+            >
+              ×
+            </button>
+            <div className="mb-4 font-bold text-lg text-purple-700">Voucher QR Code</div>
+            <QRCode
+              value={JSON.stringify({
+                ...myVouchers.find(v => v.id === qrVoucherId),
+                owner: myVouchers.find(v => v.id === qrVoucherId)?.owner
+              })}
+              size={180}
+              bgColor="#fff"
+              fgColor="#7c3aed"
+              level="M"
+            />
+            <div className="mt-4 text-xs text-gray-500 text-center break-all max-w-xs">
+              {`ID: ${qrVoucherId}`}
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
   )
 }

@@ -1,29 +1,64 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { marketplaceVouchers } from "@/app/data/mockVouchers";
+import { mockUsers } from "@/app/data/mockUsers";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Gift } from "lucide-react";
+import { Gift, Wallet } from "lucide-react";
 import React, { useState } from "react";
+import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button";
+import WalletBalance from "@/components/WalletBalance"
+import { WalletProvider } from "@/components/providers/wallet-provider"
 
 // Fake current user (replace with real auth in production)
-const currentUser = { username: "nguyenvana", displayName: "Nguyễn Văn A" };
+const currentUser = { username: "nguyenvana", displayName: "Nguyễn Văn A", email: "nguyenvana" };
 
 export default function VoucherDetailPage() {
   const router = useRouter();
   const { id } = useParams();
   const voucher = marketplaceVouchers.find(v => v.id === Number(id));
-  const [buying, setBuying] = useState(false);
+  const [solBalance, setSolBalance] = useState(1.0);
+  const [myVouchers, setMyVouchers] = useState<any[]>(marketplaceVouchers.filter(v => v.owner?.username === currentUser.username));
+  const [message, setMessage] = useState("");
   const [showSell, setShowSell] = useState(false);
   const [showGift, setShowGift] = useState(false);
   const [sellPrice, setSellPrice] = useState('');
   const [sellContact, setSellContact] = useState('');
+  const [giftTo, setGiftTo] = useState('');
+  const [giftError, setGiftError] = useState('');
 
   if (!voucher) return <div className="text-center mt-10 text-red-500">Voucher not found.</div>;
 
-  const isOwner = voucher.owners?.some(o => o.username === currentUser.username);
+  const isOwner = voucher.owner?.username === currentUser.username;
 
-  // Hàm xử lý bán lại
+  // Buy from publisher
+  const handleBuyFromPublisher = () => {
+    if (solBalance < voucher.price) {
+      setMessage("Not enough SOL!");
+      return;
+    }
+    setSolBalance(bal => +(bal - voucher.price).toFixed(3));
+    voucher.owner = { ...currentUser };
+    setMyVouchers([...myVouchers, voucher]);
+    setMessage("Purchase successful!");
+    setTimeout(() => setMessage(""), 2000);
+  };
+
+  // Buy from resale
+  const handleBuyFromResale = (item: any) => {
+    if (solBalance < item.price) {
+      setMessage("Not enough SOL!");
+      return;
+    }
+    setSolBalance(bal => +(bal - item.price).toFixed(3));
+    voucher.owner = { ...currentUser };
+    voucher.resaleList = voucher.resaleList.filter((r: any) => r.username !== item.username);
+    setMyVouchers([...myVouchers, voucher]);
+    setMessage("Resale purchase successful!");
+    setTimeout(() => setMessage(""), 2000);
+  };
+
+  // Sell
   const handleSell = () => {
     if (!sellPrice || isNaN(Number(sellPrice))) return;
     voucher.resaleList = voucher.resaleList || [];
@@ -36,10 +71,36 @@ export default function VoucherDetailPage() {
     setShowSell(false);
     setSellPrice('');
     setSellContact('');
+    setMessage("Listed on resale market!");
+    setTimeout(() => setMessage(""), 2000);
+  };
+
+  // Gift
+  const handleGift = () => {
+    const user = mockUsers.find(u => u.email === giftTo || (u as any).username === giftTo);
+    if (!user) {
+      setGiftError("User not found!");
+      return;
+    }
+    voucher.owner = {
+      username: (user as any).username || user.email,
+      displayName: user.displayName,
+      email: user.email
+    };
+    setShowGift(false);
+    setGiftTo('');
+    setGiftError('');
+    setMyVouchers(myVouchers.filter(v => v.id !== voucher.id));
+    setMessage("Gifted successfully!");
+    setTimeout(() => setMessage(""), 2000);
   };
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-4">
+      
+      {message && (
+        <div className="mb-4 text-center text-green-600 font-semibold">{message}</div>
+      )}
       <button
         onClick={() => router.back()}
         className="mb-6 flex items-center gap-2 text-purple-700 hover:text-pink-500 font-semibold transition"
@@ -80,18 +141,19 @@ export default function VoucherDetailPage() {
             </ul>
           </div>
           <div className="flex flex-col items-center justify-center gap-1">
-            <Button
-              size="lg"
-              className="w-60 text-xl py-6 bg-gradient-to-r from-blue-500 to-pink-500 font-bold rounded-2xl shadow-lg hover:scale-105 transition"
-              onClick={() => setBuying(true)}
-            >
-              Buy for {voucher.price.toLocaleString()} SOL
-            </Button>
-            <div className="text-sm text-gray-500 mt-2 text-center">
-              (Buy directly from publisher)
-            </div>
-            {buying && (
-              <div className="text-green-600 font-semibold text-center">You have purchased this voucher!</div>
+            {(
+              <>
+                <Button
+                  size="lg"
+                  className="w-60 text-xl py-6 bg-gradient-to-r from-blue-500 to-pink-500 font-bold rounded-2xl shadow-lg hover:scale-105 transition"
+                  onClick={handleBuyFromPublisher}
+                >
+                  Buy for {voucher.price.toLocaleString()} SOL
+                </Button>
+                <div className="text-sm text-gray-500 mt-2 text-center">
+                  (Buy directly from publisher)
+                </div>
+              </>
             )}
             {isOwner && (
               <div className="w-45 mt-6 flex flex-col gap-2">
@@ -110,33 +172,66 @@ export default function VoucherDetailPage() {
                   Gift your voucher
                 </Button>
                 {showSell && (
-                  <div className="mt-2 text-sm text-purple-700">
-                    <div className="flex flex-col gap-2">
-                      <input
-                        type="text"
-                        placeholder="Selling price in SOL"
-                        value={sellPrice}
-                        onChange={(e) => setSellPrice(e.target.value)}
-                        className="border border-purple-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Contact information"
-                        value={sellContact}
-                        onChange={(e) => setSellContact(e.target.value)}
-                        className="border border-purple-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                      />
-                      <Button
-                        className="w-full bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-lg px-4 py-2 text-base font-semibold shadow hover:scale-105 transition"
-                        onClick={handleSell}
+                  <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+                    onClick={() => setShowSell(false)}
+                  >
+                    <div
+                      className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm relative"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <button
+                        className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl"
+                        onClick={() => setShowSell(false)}
                       >
-                        Confirm Sale
-                      </Button>
+                        ×
+                      </button>
+                      <div className="mb-2 font-semibold text-lg text-purple-700">Sell your voucher</div>
+                      <input
+                        type="number"
+                        placeholder="Price (SOL)"
+                        value={sellPrice}
+                        onChange={e => setSellPrice(e.target.value)}
+                        className="mb-2 w-full px-3 py-2 rounded border"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Your contact"
+                        value={sellContact}
+                        onChange={e => setSellContact(e.target.value)}
+                        className="mb-4 w-full px-3 py-2 rounded border"
+                      />
+                      <Button className="w-full" onClick={handleSell}>Confirm Sell</Button>
                     </div>
                   </div>
                 )}
                 {showGift && (
-                  <div className="mt-2 text-sm text-cyan-700">[Gift form here]</div>
+                  <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+                    onClick={() => setShowGift(false)}
+                  >
+                    <div
+                      className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm relative"
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <button
+                        className="absolute top-2 right-2 text-gray-400 hover:text-red-500 text-xl"
+                        onClick={() => setShowGift(false)}
+                      >
+                        ×
+                      </button>
+                      <div className="mb-2 font-semibold text-lg text-cyan-700">Gift your voucher</div>
+                      <input
+                        type="text"
+                        placeholder="Recipient username or email"
+                        value={giftTo}
+                        onChange={e => setGiftTo(e.target.value)}
+                        className="mb-2 w-full px-3 py-2 rounded border"
+                      />
+                      {giftError && <div className="text-red-500 text-sm mb-2">{giftError}</div>}
+                      <Button className="w-full" onClick={handleGift}>Confirm Gift</Button>
+                    </div>
+                  </div>
                 )}
               </div>
             )}
@@ -162,9 +257,19 @@ export default function VoucherDetailPage() {
                     <div className="text-gray-600 text-sm">Contact: {item.contact}</div>
                   </div>
                   <div className="flex items-center gap-4 mt-2 md:mt-0">
-                    <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-lg px-6 py-2 text-base font-semibold shadow hover:scale-105 transition">
-                      Buy for {item.price.toLocaleString()} SOL
-                    </Button>
+                    {item.username === currentUser.username ? (
+                      <span className="text-xs text-green-600 font-semibold flex items-center gap-1">
+                        <svg width="18" height="18" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#22c55e"/><path d="M8 12l2 2 4-4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        Your listing
+                      </span>
+                    ) : (
+                      <Button
+                        className="bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-lg px-6 py-2 text-base font-semibold shadow hover:scale-105 transition"
+                        onClick={() => handleBuyFromResale(item)}
+                      >
+                        Buy for {item.price.toLocaleString()} SOL
+                      </Button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -174,6 +279,8 @@ export default function VoucherDetailPage() {
           )}
         </CardContent>
       </Card>
+
+      
     </div>
   );
 }

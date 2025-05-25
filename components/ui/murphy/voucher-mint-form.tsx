@@ -74,7 +74,9 @@ export function VoucherMintForm() {
     throw new Error("Failed to upload metadata to Pinata after retries")
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
   }
 

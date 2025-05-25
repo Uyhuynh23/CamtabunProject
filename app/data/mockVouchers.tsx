@@ -6,7 +6,7 @@ export const marketplaceVouchers = [
     description: "Get amazing discounts on Italian pizzas",
     discount: 25,
     expiryDate: "2025-08-31",
-    price: 0.5,
+    price: 0.05,
     type: "discount",
     status: "available",
     image: "/images/vouchers/pizza_house.jpg",
@@ -24,7 +24,7 @@ export const marketplaceVouchers = [
         username: "nguyenvana",
         displayName: "Nguyen Van A",
         contact: "028 1234 5678",
-        price: 0.45
+        price: 0.045
       }
     ]
   },
@@ -35,7 +35,7 @@ export const marketplaceVouchers = [
     description: "Perfect for coffee lovers at Café Mocha",
     discount: 15,
     expiryDate: "2025-12-31",
-    price: 0.3,
+    price: 0.03,
     type: "discount",
     status: "available",
     image: "/images/vouchers/cafe_mocha.jpg",
@@ -57,7 +57,7 @@ export const marketplaceVouchers = [
     description: "Exclusive discount for Golden Buffet's premium menu",
     discount: 40,
     expiryDate: "2025-09-30",
-    price: 0.75,
+    price: 0.07,
     type: "discount",
     status: "available",
     image: "/images/vouchers/golden_buffet.jpg",
@@ -75,7 +75,7 @@ export const marketplaceVouchers = [
         username: "nguyenvana",
         displayName: "Nguyen Van A",
         contact: "028 3456 7890",
-        price: 0.7
+        price: 0.069
       }
     ]
   },
@@ -86,7 +86,7 @@ export const marketplaceVouchers = [
     description: "Special discount for traditional Pho during holidays",
     discount: 20,
     expiryDate: "2025-12-25",
-    price: 0.45,
+    price: 0.04,
     type: "discount",
     status: "available",
     image: "/images/vouchers/pho_ly_quoc_su.jpg",
@@ -108,7 +108,7 @@ export const marketplaceVouchers = [
     description: "Enjoy authentic Hanoi Bun Cha at a great price",
     discount: 30,
     expiryDate: "2025-10-15",
-    price: 0.4,
+    price: 0.06,
     type: "discount",
     status: "available",
     image: "/images/vouchers/bun_cha.jpg",
@@ -126,7 +126,7 @@ export const marketplaceVouchers = [
         username: "lethic",
         displayName: "Le Thi C",
         contact: "024 2345 6789",
-        price: 0.38
+        price: 0.058
       }
     ]
   },
@@ -137,7 +137,7 @@ export const marketplaceVouchers = [
     description: "Grill your favorite meats with a sizzling deal",
     discount: 35,
     expiryDate: "2025-11-30",
-    price: 0.65,
+    price: 0.08,
     type: "discount",
     status: "available",
     image: "/images/vouchers/gogi_bbq.jpg",
@@ -159,7 +159,7 @@ export const marketplaceVouchers = [
     description: "Fresh Vietnamese coffee for early birds",
     discount: 10,
     expiryDate: "2025-06-30",
-    price: 0.25,
+    price: 0.02,
     type: "discount",
     status: "available",
     image: "/images/vouchers/highlands.jpg",
@@ -177,7 +177,7 @@ export const marketplaceVouchers = [
         username: "phamvanh",
         displayName: "Pham Van H",
         contact: "1900 1755",
-        price: 0.22
+        price: 0.018
       }
     ]
   },
@@ -188,7 +188,7 @@ export const marketplaceVouchers = [
     description: "Enjoy unlimited hotpot at a discounted rate",
     discount: 20,
     expiryDate: "2025-12-01",
-    price: 0.55,
+    price: 0.09,
     type: "discount",
     status: "available",
     image: "/images/vouchers/kichi_kichi.jpg",
@@ -210,7 +210,7 @@ export const marketplaceVouchers = [
     description: "Crispy chicken combo for less",
     discount: 18,
     expiryDate: "2025-07-31",
-    price: 0.35,
+    price: 0.04,
     type: "discount",
     status: "available",
     image: "/images/vouchers/texas_chicken.jpg",
@@ -228,7 +228,7 @@ export const marketplaceVouchers = [
         username: "nguyenvana",
         displayName: "Nguyen Van A",
         contact: "028 6789 0123",
-        price: 0.32
+        price: 0.032
       }
     ]
   },
@@ -239,7 +239,7 @@ export const marketplaceVouchers = [
     description: "Cool off with your favorite scoop",
     discount: 12,
     expiryDate: "2025-08-15",
-    price: 0.2,
+    price: 0.01,
     type: "discount",
     status: "available",
     image: "/images/vouchers/baskin_robbins.jpg",
