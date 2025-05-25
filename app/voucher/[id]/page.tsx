@@ -16,10 +16,27 @@ export default function VoucherDetailPage() {
   const [buying, setBuying] = useState(false);
   const [showSell, setShowSell] = useState(false);
   const [showGift, setShowGift] = useState(false);
+  const [sellPrice, setSellPrice] = useState('');
+  const [sellContact, setSellContact] = useState('');
 
   if (!voucher) return <div className="text-center mt-10 text-red-500">Voucher not found.</div>;
 
   const isOwner = voucher.owners?.some(o => o.username === currentUser.username);
+
+  // Hàm xử lý bán lại
+  const handleSell = () => {
+    if (!sellPrice || isNaN(Number(sellPrice))) return;
+    voucher.resaleList = voucher.resaleList || [];
+    voucher.resaleList.push({
+      username: currentUser.username,
+      displayName: currentUser.displayName,
+      contact: sellContact,
+      price: Number(sellPrice),
+    });
+    setShowSell(false);
+    setSellPrice('');
+    setSellContact('');
+  };
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-4">
@@ -34,7 +51,7 @@ export default function VoucherDetailPage() {
       {/* Banner */}
       <div className="relative rounded-3xl overflow-hidden shadow-2xl mb-8">
         <img
-          src={voucher.image}
+          src={voucher.image ? voucher.image : "/images/default.png"}
           alt={voucher.name}
           className="w-full h-72 object-cover brightness-90"
         />
@@ -93,7 +110,30 @@ export default function VoucherDetailPage() {
                   Gift your voucher
                 </Button>
                 {showSell && (
-                  <div className="mt-2 text-sm text-purple-700">[Sell form here]</div>
+                  <div className="mt-2 text-sm text-purple-700">
+                    <div className="flex flex-col gap-2">
+                      <input
+                        type="text"
+                        placeholder="Selling price in SOL"
+                        value={sellPrice}
+                        onChange={(e) => setSellPrice(e.target.value)}
+                        className="border border-purple-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Contact information"
+                        value={sellContact}
+                        onChange={(e) => setSellContact(e.target.value)}
+                        className="border border-purple-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                      />
+                      <Button
+                        className="w-full bg-gradient-to-r from-purple-400 to-pink-400 text-white rounded-lg px-4 py-2 text-base font-semibold shadow hover:scale-105 transition"
+                        onClick={handleSell}
+                      >
+                        Confirm Sale
+                      </Button>
+                    </div>
+                  </div>
                 )}
                 {showGift && (
                   <div className="mt-2 text-sm text-cyan-700">[Gift form here]</div>

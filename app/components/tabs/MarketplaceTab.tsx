@@ -146,7 +146,10 @@ export function MarketplaceTab() {
                             className="absolute inset-0 w-full h-full object-cover"
                           />
                         ) : (
-                          <Gift className="w-16 h-16 text-purple-400 absolute inset-0 m-auto" />
+                          <img
+                            src="/images/default.png"
+                            alt="Default Voucher"
+                            className="absolute inset-0 w-full h-full object-cover"/>
                         )}
                       </div>
                     </Card>

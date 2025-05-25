@@ -37,8 +37,8 @@ export function MyVouchersTab({ currentUser }: MyVouchersTabProps) {
   };
 
   // Danh sách voucher gốc của user
-  const ownedVouchers = marketplaceVouchers.filter(v =>
-    v.owners?.some(o => o.username === currentUser.email)
+  const ownedVouchers = marketplaceVouchers.filter(
+    v => v.owner?.email === currentUser.email
   );
 
   // Danh sách voucher sau khi filter/search
@@ -110,7 +110,7 @@ export function MyVouchersTab({ currentUser }: MyVouchersTabProps) {
                   <CardContent className="p-4 flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                       <img
-                        src={voucher.image}
+                        src={voucher.image ? voucher.image : "/images/default.png"}
                         alt={voucher.name}
                         className="w-12 h-12 rounded-lg object-cover border border-purple-100"
                       />

@@ -6,7 +6,7 @@ export const marketplaceVouchers = [
     description: "Get amazing discounts on Italian pizzas",
     discount: 25,
     expiryDate: "2025-08-31",
-    price: 50,
+    price: 0.5,
     type: "discount",
     status: "available",
     image: "/images/vouchers/pizza_house.jpg",
@@ -18,7 +18,15 @@ export const marketplaceVouchers = [
     contact: "028 1234 5678",
     highlight: "Applicable for the whole menu, not valid for combos",
     merchant: "Pizza House",
-    owner: { username: "nguyenvana", displayName: "Nguyen Van A", email: "nguyenvana" }
+    owner: { username: "nguyenvana", displayName: "Nguyen Van A", email: "nguyenvana" },
+    resaleList: [
+      {
+        username: "nguyenvana",
+        displayName: "Nguyen Van A",
+        contact: "028 1234 5678",
+        price: 0.45
+      }
+    ]
   },
   {
     id: 2,
@@ -27,7 +35,7 @@ export const marketplaceVouchers = [
     description: "Perfect for coffee lovers at Café Mocha",
     discount: 15,
     expiryDate: "2025-12-31",
-    price: 30,
+    price: 0.3,
     type: "discount",
     status: "available",
     image: "/images/vouchers/cafe_mocha.jpg",
@@ -39,7 +47,8 @@ export const marketplaceVouchers = [
     contact: "028 2345 6789",
     highlight: "Get 1 free cookie when buying 2 drinks",
     merchant: "Café Mocha",
-    owner: { username: "tranthib", displayName: "Tran Thi B", email: "tranthib" }
+    owner: { username: "tranthib", displayName: "Tran Thi B", email: "tranthib" },
+    resaleList: []
   },
   {
     id: 3,
@@ -48,7 +57,7 @@ export const marketplaceVouchers = [
     description: "Exclusive discount for Golden Buffet's premium menu",
     discount: 40,
     expiryDate: "2025-09-30",
-    price: 75,
+    price: 0.75,
     type: "discount",
     status: "available",
     image: "/images/vouchers/golden_buffet.jpg",
@@ -60,7 +69,15 @@ export const marketplaceVouchers = [
     contact: "028 3456 7890",
     highlight: "Unlimited number of dishes",
     merchant: "Golden Buffet",
-    owner: { username: "nguyenvana", displayName: "Nguyen Van A", email: "nguyenvana" }
+    owner: { username: "nguyenvana", displayName: "Nguyen Van A", email: "nguyenvana" },
+    resaleList: [
+      {
+        username: "nguyenvana",
+        displayName: "Nguyen Van A",
+        contact: "028 3456 7890",
+        price: 0.7
+      }
+    ]
   },
   {
     id: 4,
@@ -69,7 +86,7 @@ export const marketplaceVouchers = [
     description: "Special discount for traditional Pho during holidays",
     discount: 20,
     expiryDate: "2025-12-25",
-    price: 45,
+    price: 0.45,
     type: "discount",
     status: "available",
     image: "/images/vouchers/pho_ly_quoc_su.jpg",
@@ -81,7 +98,8 @@ export const marketplaceVouchers = [
     contact: "024 1234 5678",
     highlight: "Free fried dough sticks when dining in",
     merchant: "Pho Ly Quoc Su",
-    owner: { username: "phamvanh", displayName: "Pham Van H", email: "phamvanh" }
+    owner: { username: "phamvanh", displayName: "Pham Van H", email: "phamvanh" },
+    resaleList: []
   },
   {
     id: 5,
@@ -90,7 +108,7 @@ export const marketplaceVouchers = [
     description: "Enjoy authentic Hanoi Bun Cha at a great price",
     discount: 30,
     expiryDate: "2025-10-15",
-    price: 40,
+    price: 0.4,
     type: "discount",
     status: "available",
     image: "/images/vouchers/bun_cha.jpg",
@@ -102,7 +120,15 @@ export const marketplaceVouchers = [
     contact: "024 2345 6789",
     highlight: "Free spring roll when buying 2 sets",
     merchant: "Bun Cha Ha Noi",
-    owner: { username: "lethic", displayName: "Le Thi C", email: "lethic" }
+    owner: { username: "lethic", displayName: "Le Thi C", email: "lethic" },
+    resaleList: [
+      {
+        username: "lethic",
+        displayName: "Le Thi C",
+        contact: "024 2345 6789",
+        price: 0.38
+      }
+    ]
   },
   {
     id: 6,
@@ -111,7 +137,7 @@ export const marketplaceVouchers = [
     description: "Grill your favorite meats with a sizzling deal",
     discount: 35,
     expiryDate: "2025-11-30",
-    price: 65,
+    price: 0.65,
     type: "discount",
     status: "available",
     image: "/images/vouchers/gogi_bbq.jpg",
@@ -123,7 +149,8 @@ export const marketplaceVouchers = [
     contact: "028 4567 8901",
     highlight: "Free Korean salad",
     merchant: "Gogi House",
-    owner: { username: "nguyenvana", displayName: "Nguyen Van A", email: "nguyenvana" }
+    owner: { username: "nguyenvana", displayName: "Nguyen Van A", email: "nguyenvana" },
+    resaleList: []
   },
   {
     id: 7,
@@ -132,7 +159,7 @@ export const marketplaceVouchers = [
     description: "Fresh Vietnamese coffee for early birds",
     discount: 10,
     expiryDate: "2025-06-30",
-    price: 25,
+    price: 0.25,
     type: "discount",
     status: "available",
     image: "/images/vouchers/highlands.jpg",
@@ -144,7 +171,15 @@ export const marketplaceVouchers = [
     contact: "1900 1755",
     highlight: "Free topping when buying large size",
     merchant: "Highlands Coffee",
-    owner: { username: "phamvanh", displayName: "Pham Van H", email: "phamvanh" }
+    owner: { username: "phamvanh", displayName: "Pham Van H", email: "phamvanh" },
+    resaleList: [
+      {
+        username: "phamvanh",
+        displayName: "Pham Van H",
+        contact: "1900 1755",
+        price: 0.22
+      }
+    ]
   },
   {
     id: 8,
@@ -153,7 +188,7 @@ export const marketplaceVouchers = [
     description: "Enjoy unlimited hotpot at a discounted rate",
     discount: 20,
     expiryDate: "2025-12-01",
-    price: 55,
+    price: 0.55,
     type: "discount",
     status: "available",
     image: "/images/vouchers/kichi_kichi.jpg",
@@ -165,7 +200,8 @@ export const marketplaceVouchers = [
     contact: "028 5678 9012",
     highlight: "Unlimited soup and toppings",
     merchant: "Kichi Kichi",
-    owner: { username: "lethic", displayName: "Le Thi C", email: "lethic" }
+    owner: { username: "lethic", displayName: "Le Thi C", email: "lethic" },
+    resaleList: []
   },
   {
     id: 9,
@@ -174,7 +210,7 @@ export const marketplaceVouchers = [
     description: "Crispy chicken combo for less",
     discount: 18,
     expiryDate: "2025-07-31",
-    price: 35,
+    price: 0.35,
     type: "discount",
     status: "available",
     image: "/images/vouchers/texas_chicken.jpg",
@@ -186,7 +222,15 @@ export const marketplaceVouchers = [
     contact: "028 6789 0123",
     highlight: "Free large fries",
     merchant: "Texas Chicken",
-    owner: { username: "nguyenvana", displayName: "Nguyen Van A", email: "nguyenvana" }
+    owner: { username: "nguyenvana", displayName: "Nguyen Van A", email: "nguyenvana" },
+    resaleList: [
+      {
+        username: "nguyenvana",
+        displayName: "Nguyen Van A",
+        contact: "028 6789 0123",
+        price: 0.32
+      }
+    ]
   },
   {
     id: 10,
@@ -195,7 +239,7 @@ export const marketplaceVouchers = [
     description: "Cool off with your favorite scoop",
     discount: 12,
     expiryDate: "2025-08-15",
-    price: 20,
+    price: 0.2,
     type: "discount",
     status: "available",
     image: "/images/vouchers/baskin_robbins.jpg",
@@ -207,6 +251,7 @@ export const marketplaceVouchers = [
     contact: "028 7890 1234",
     highlight: "Get 1 extra scoop when buying 2 scoops",
     merchant: "Baskin Robbins",
-    owner: { username: "phamvanh", displayName: "Pham Van H", email: "phamvanh" }
+    owner: { username: "phamvanh", displayName: "Pham Van H", email: "phamvanh" },
+    resaleList: []
   }
 ]
